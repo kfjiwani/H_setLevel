@@ -1,0 +1,67 @@
+ 
+Pseudo code:
+
+**function** SetLevel(_graph_) **returns** a value  
+&emsp;**inputs:**  
+&emsp;&emsp;_graph_, an initialized (unleveled) planning graph  
+  
+&emsp;_graph_.fill()  _/* fill the planning graph until it levels off */_  
+&emsp;**for** _layer<sub>i_ in _graph.literalLayers_ **do**  
+&emsp;&emsp;_allGoalsMet_ <- _true_  
+&emsp;&emsp;**for each** _goal_ in _graph.goalLiterals_ **do**  
+&emsp;&emsp;&emsp;**if** _goal_ not in _layer<sub>i_ **then** _allGoalsMet_ <- _false_  
+&emsp;&emsp;**if** not _allGoalsMet_ **then** continue  
+  
+&emsp;&emsp;_goalsAreMutex_ <- _false_  
+&emsp;&emsp;**for each** _goalA_ in _graph.goalLiterals_ **do**  
+&emsp;&emsp;&emsp;**for each** _goalB_ in _graph.goalLiterals_ **do**  
+&emsp;&emsp;&emsp;&emsp;**if** _layer<sub>i_.isMutex(_goalA_, _goalB_) **then** _goalsAreMutex_ <- _true_  
+&emsp;&emsp;**if** not _goalsAreMutex_ **then return** _i_
+
+        
+def h_setlevel(self):
+
+        """
+        # TODO: implement setlevel heuristic
+        self.fill();
+        for level, layer in enumerate(self.literal_layers):
+           allGoalsMet = True;
+           for a in self.goal:
+               if a not in layer:
+                   allGoalsMet = False
+           if not (allGoalsMet):
+               continue
+           goalsAreMutex  = False;
+           for a in self.goal:
+               for b in self.goal:
+                   if layer.is_mutex(a,b):
+                       goalsAreMutex = True
+           if not(goalsAreMutex):
+               return level
+           
+        return level
+
+
+ def h_setlevel-alternate(self):
+
+        """
+        # TODO: implement setlevel heuristic
+        i = 0
+        while not self._is_leveled:
+            layer = self.literal_layers[-1]
+            allGoalsMet = True
+            for goal in self.goal:
+                if goal not in layer:
+                    allGoalsMet = False
+                if not allGoalsMet:
+                   continue
+               
+            goalsAreMutex = False
+            for g1, g2 in combinations(self.goal, 2):
+                if layer.is_mutex(g1, g2):
+                    goalsAreMutex = True
+            if goalsAreMutex == False and allGoalsMet == True:
+               return i
+            self._extend()
+            i  = i + 1
+        return i
